@@ -6,7 +6,6 @@ const cors = require("cors");
 const port = process.env.PORT || 5000;
 
 // jwt 
-// doctor-portal-b0f25-firebase-adminsdk-hmbi0-9e85993262.json
 var serviceAccount = require("./doctor-portal-b0f25-firebase-adminsdk-hmbi0-9e85993262.json");
 
 admin.initializeApp({
@@ -132,5 +131,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`)
+    console.log(`App listening at here http://localhost:${port}`)
 })
