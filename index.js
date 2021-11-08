@@ -54,7 +54,7 @@ async function run() {
         // get all user paibo
         app.get('/appointments', veryfyToken, async (req, res) => {
             const email = req.query.email;
-            const date = new Date(req.query.date).toLocaleDateString();
+            const date = req.query.date;
             // console.log(date);
             const quary = { email: email , date: date}
             console.log(quary);
