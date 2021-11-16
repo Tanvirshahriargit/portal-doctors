@@ -1,8 +1,13 @@
-const { MongoClient } = require('mongodb');
 const express = require('express')
 let admin = require("firebase-admin");
 const app = express()
 const cors = require("cors");
+const { MongoClient } = require('mongodb');
+const ObjectId = require("mongodb").ObjectId;
+// const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const stripe = require("stripe")('sk_test_51JvqVzKq8hmL0OgFcaU8ZBAdKXazWtYEJcof3auFKgBwikI0tt6dOXwL8cruL0Dw7Xh4gRIaRjPE4Xc6kt5agsX900QLbZh7Uc');
+// console.log("update stripe", stripe);
+
 const port = process.env.PORT || 5000;
 
 // jwt 
@@ -57,17 +62,39 @@ async function run() {
             const date = req.query.date;
             // console.log(date);
             const quary = { email: email , date: date}
-            console.log(quary);
+            // console.log(quary);
             const cursor = appointmentsCollection.find(quary);
             const appointments = await cursor.toArray();
             res.json(appointments)
         });
+
+        // sigle id get
+        app.get('/appointments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await appointmentsCollection.findOne(query);
+            res.json(result);
+        })
 
         // post api
         app.post('/appointments', async (req, res) => {
             const appointments = req.body;
             const result = await appointmentsCollection.insertOne(appointments)
             res.json(result)
+        })
+
+        //appointments update
+        app.put('/appointments/:id', async (req, res) => {
+            const id = req.params.id;
+            const payment = req.body;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    payment: payment
+                }
+            };
+            const result = await appointmentsCollection.updateOne(filter, updateDoc);
+            res.json(result);
         })
 
         // user get admin
@@ -87,7 +114,7 @@ async function run() {
             const user = req.body;
             console.log(user);
             const result = await userCollection.insertOne(user)
-            console.log(result);
+            // console.log(result);
             res.json(result)
         })
         // Users put and check user Upsert
@@ -115,6 +142,19 @@ async function run() {
             else {
                 res.status(403).json({message : "You Do not Have acess to make admin"})
             }
+
+            // payment stripe status post r
+            app.post('/create-payment-intent', async (req, res) => {
+                const paymentInfo = req.body;
+                const amount = paymentInfo.price * 100;
+                const paymentIntent = await stripe.paymentIntents.create({
+                    currency: 'usd',
+                    amount: amount,
+                    payment_method_types: ['card']
+                });
+                res.json({ clientSecret: paymentIntent.client_secret })
+            })
+            
             
 
         })
