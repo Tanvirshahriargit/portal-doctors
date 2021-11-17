@@ -10,6 +10,9 @@ const stripe = require("stripe")('sk_test_51JvqVzKq8hmL0OgFcaU8ZBAdKXazWtYEJcof3
 
 const port = process.env.PORT || 5000;
 
+// fileupload
+const fileUpload = require('express-fileupload');
+
 // jwt 
 var serviceAccount = require("./doctor-portal-b0f25-firebase-adminsdk-hmbi0-9e85993262.json");
 
@@ -23,6 +26,7 @@ require('dotenv').config()
 // middleware 
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.l5n9e.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 // console.log(uri);
@@ -55,6 +59,7 @@ async function run() {
         const database = client.db("doctors_portal");
         const appointmentsCollection = database.collection("appointment");
         const userCollection = database.collection("users")
+        const doctorsCollection = database.collection("doctors")
 
         // get all user paibo
         app.get('/appointments', veryfyToken, async (req, res) => {
@@ -95,6 +100,31 @@ async function run() {
             };
             const result = await appointmentsCollection.updateOne(filter, updateDoc);
             res.json(result);
+        })
+
+        // get all dictors for
+
+        app.get('/doctors', async (req, res) => {
+            const cursor = doctorsCollection.find({})
+            const result = await cursor.toArray();
+            res.json(result);
+        })
+
+        // post doctors
+        app.post('/doctors', async (req, res) => {
+            const name =  req.body.name;
+            const email = req.body.email;
+            const pic = req.files.image;
+            const picData = pic.data;
+            const encodedData = picData.toString('base64');
+            const imgageBuffer = Buffer.from(encodedData, 'base64');
+            const doctor = {
+                name,
+                email,
+                image: imgageBuffer
+            }
+            const result = await doctorsCollection.insertOne(doctor);
+            res.json(result)
         })
 
         // user get admin
