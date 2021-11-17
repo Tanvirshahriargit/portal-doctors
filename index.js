@@ -4,8 +4,8 @@ const app = express()
 const cors = require("cors");
 const { MongoClient } = require('mongodb');
 const ObjectId = require("mongodb").ObjectId;
-// const stripe = require("stripe")(process.env.STRIPE_SECRET);
-const stripe = require("stripe")('sk_test_51JvqVzKq8hmL0OgFcaU8ZBAdKXazWtYEJcof3auFKgBwikI0tt6dOXwL8cruL0Dw7Xh4gRIaRjPE4Xc6kt5agsX900QLbZh7Uc');
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+// const stripe = require("stripe")('sk_test_51JvqVzKq8hmL0OgFcaU8ZBAdKXazWtYEJcof3auFKgBwikI0tt6dOXwL8cruL0Dw7Xh4gRIaRjPE4Xc6kt5agsX900QLbZh7Uc');
 // console.log("update stripe", stripe);
 
 const port = process.env.PORT || 5000;
