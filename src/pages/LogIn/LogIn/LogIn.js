@@ -1,6 +1,6 @@
 import { Alert, Button, CircularProgress, Container, Grid, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { NavLink ,useLocation, useHistory} from 'react-router-dom';
+import { NavLink ,useLocation, useNavigate} from 'react-router-dom';
 import Login from "../.../../../../images/login.png"
 import useAuth from '../../../hoks/useAuth';
 
@@ -9,7 +9,7 @@ const LogIn = () => {
     const {signInwithGoogle, user, logInUser, loading, authError } = useAuth();
 
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     
 
     const handleOnchnage = (e) => {
@@ -21,13 +21,13 @@ const LogIn = () => {
 
     }
     const handeLogInSubmit = e => {
-        logInUser(loginData.email , loginData.password, location, history)
+        logInUser(loginData.email , loginData.password, location, navigate)
         e.preventDefault();
     }
 
     // handle google sign in 
     const handleGoogleSignIn = () => {
-        signInwithGoogle(location, history)
+        signInwithGoogle(location, navigate)
     }
     return (
         <Container>

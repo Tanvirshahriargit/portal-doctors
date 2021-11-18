@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Alert, Button, CircularProgress, Container, Grid, TextField, Typography } from '@mui/material';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Login from "../.../../../../images/login.png"
 import useAuth from '../../../hoks/useAuth';
 const Register = () => {
     const {user, registerUser ,loading, authError} = useAuth();
-    const history = useHistory();
-    const location = useHistory();
+    const navigate = useNavigate();
+    const location = useNavigate();
     const [loginData, setLoginData]= useState({})
     const handleOnBlur = (e) => {
         const field = e.target.name;
@@ -25,7 +25,7 @@ const Register = () => {
             alert("Your Password did not match")
             return;
         }
-        registerUser(loginData.email , loginData.password,loginData.name , history)
+        registerUser(loginData.email , loginData.password,loginData.name , navigate)
         // alert("Helloe")
 
     }

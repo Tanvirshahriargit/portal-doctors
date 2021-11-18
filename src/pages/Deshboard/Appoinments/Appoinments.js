@@ -25,7 +25,7 @@ const Appoinments = ({ date }) => {
                 // console.log(data);
                 setAppointments(data)
             })
-    }, [date, user.email])
+    }, [date,user.email])
     return (
         <div>
             <h2>Appoint Ments {appointments.length}</h2>

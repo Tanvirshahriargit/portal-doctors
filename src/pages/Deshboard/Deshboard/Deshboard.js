@@ -18,23 +18,15 @@ import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
-    Switch,
-    Route,
-    useRouteMatch
+    Outlet
 } from "react-router-dom";
-import DashBoardHome from '../DashBoardHome/DashBoardHome';
-import Payment from '../Payment/Payment';
-import MakeAdmin from '../MakeAdmin/MakeAdmin';
-import AddDoctor from '../AddDoctor/AddDoctor';
 import useAuth from '../../../hoks/useAuth';
-import AdminRoute from '../../LogIn/AdminRoute/AdminRoute';
 
 const drawerWidth = 200;
 
 function Dashboard(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    let { path, url } = useRouteMatch();
     // Admin niye asa 
     const { admin } = useAuth();
 
@@ -47,11 +39,11 @@ function Dashboard(props) {
             <Toolbar />
             <Divider />
             <Link to="/appointment"> <Button color="inherit">Appointment</Button> </Link>
-            <Link to={`${url}`}> <Button color="inherit">Dashboard</Button> </Link>
+            <Link to="/dashboard"> <Button color="inherit">Dashboard</Button> </Link>
             {/* <Link to={`${url}`}> <Button color="inherit">Payment</Button> </Link> */}
             {admin && <Box>
-                <Link to={`${url}/makeAdmin`}> <Button color="inherit">Make Admin</Button> </Link>
-            <Link to={`${url}/addDoctor`}> <Button color="inherit">Add Doctor</Button> </Link>
+                <Link to={`/dashboard/makeAdmin`}> <Button color="inherit">Make Admin</Button> </Link>
+            <Link to={`/dashboard/addDoctor`}> <Button color="inherit">Add Doctor</Button> </Link>
             </Box>}
             <List>
                 {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -130,20 +122,7 @@ function Dashboard(props) {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
             >
                 <Toolbar />
-                <Switch>
-                    <Route exact path={path}>
-                        <DashBoardHome></DashBoardHome>
-                    </Route>
-                    <Route  path={`${path}/payment/:appointmentId`}>
-                        <Payment></Payment>
-                    </Route>
-                    <AdminRoute path={`${path}/makeAdmin`}>
-                        <MakeAdmin></MakeAdmin>
-                    </AdminRoute>
-                    <AdminRoute path={`${path}/addDoctor`}>
-                        <AddDoctor></AddDoctor>
-                    </AdminRoute>
-                </Switch>
+                <Outlet></Outlet>
             </Box>
         </Box>
     );
